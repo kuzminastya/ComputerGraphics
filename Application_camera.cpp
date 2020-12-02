@@ -99,7 +99,7 @@ void processInput(GLFWwindow* window)
 int main(void)
 {
     GLFWwindow* window;
-    if (!glfwInit()) // инициализация GLFW
+    if (!glfwInit()) // ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї GLFW
         return -1;
     window = glfwCreateWindow(800, 600, "Window", NULL, NULL);
     if (!window) {
@@ -122,7 +122,7 @@ int main(void)
         -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   
         -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    
     };
-    unsigned int indices[] = {  // делаем прямоугольник из двух треугольников
+    unsigned int indices[] = {  // Г¤ГҐГ«Г ГҐГ¬ ГЇГ°ГїГ¬Г®ГіГЈГ®Г«ГјГ­ГЁГЄ ГЁГ§ Г¤ГўГіГµ ГІГ°ГҐГіГЈГ®Г«ГјГ­ГЁГЄГ®Гў
         0, 1, 3,
         1, 2, 3
     };
@@ -173,9 +173,9 @@ int main(void)
     unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));*/
 
-    while (!glfwWindowShouldClose(window)) // цикл для рисования изображений (пока пользователь не закроет)
+    while (!glfwWindowShouldClose(window)) // Г¶ГЁГЄГ« Г¤Г«Гї Г°ГЁГ±Г®ГўГ Г­ГЁГї ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГ© (ГЇГ®ГЄГ  ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј Г­ГҐ Г§Г ГЄГ°Г®ГҐГІ)
     {
-        processInput(window); // чтобы закрыть окно с помощью кнопки
+        processInput(window); // Г·ГІГ®ГЎГ» Г§Г ГЄГ°Г»ГІГј Г®ГЄГ­Г® Г± ГЇГ®Г¬Г®Г№ГјГѕ ГЄГ­Г®ГЇГЄГЁ
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -197,7 +197,7 @@ int main(void)
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
-        glfwPollEvents(); // проверяет наличие действий с клавиатуры или мыши
+        glfwPollEvents(); // ГЇГ°Г®ГўГҐГ°ГїГҐГІ Г­Г Г«ГЁГ·ГЁГҐ Г¤ГҐГ©Г±ГІГўГЁГ© Г± ГЄГ«Г ГўГЁГ ГІГіГ°Г» ГЁГ«ГЁ Г¬Г»ГёГЁ
     }
 
     glfwTerminate();
