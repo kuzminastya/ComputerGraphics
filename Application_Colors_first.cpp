@@ -13,7 +13,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 static unsigned int CompileShader(unsigned int type, const std::string& source);
 static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 
-// делаем камеру
+// Г¤ГҐГ«Г ГҐГ¬ ГЄГ Г¬ГҐГ°Гі
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -55,7 +55,7 @@ const char* LightFragmentShaderSource = "#version 330 core\n"
 int main(void)
 {
     GLFWwindow* window;
-    if (!glfwInit()) // инициализация GLFW
+    if (!glfwInit()) // ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї GLFW
         return -1;
     window = glfwCreateWindow(800, 600, "Window", NULL, NULL);
     if (!window) {
@@ -139,13 +139,13 @@ int main(void)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    while (!glfwWindowShouldClose(window)) // цикл для рисования изображений (пока пользователь не закроет)
+    while (!glfwWindowShouldClose(window)) // Г¶ГЁГЄГ« Г¤Г«Гї Г°ГЁГ±Г®ГўГ Г­ГЁГї ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГ© (ГЇГ®ГЄГ  ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј Г­ГҐ Г§Г ГЄГ°Г®ГҐГІ)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        processInput(window); // чтобы закрыть окно с помощью кнопки
+        processInput(window); // Г·ГІГ®ГЎГ» Г§Г ГЄГ°Г»ГІГј Г®ГЄГ­Г® Г± ГЇГ®Г¬Г®Г№ГјГѕ ГЄГ­Г®ГЇГЄГЁ
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -174,7 +174,7 @@ int main(void)
         glBindVertexArray(array);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // светлый куб
+        // Г±ГўГҐГІГ«Г»Г© ГЄГіГЎ
         glUseProgram(lightingShaderProgram);
 
         model = glm::mat4(1.0f);
@@ -192,7 +192,7 @@ int main(void)
         glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwSwapBuffers(window);
-        glfwPollEvents(); // проверяет наличие действий с клавиатуры или мыши
+        glfwPollEvents(); // ГЇГ°Г®ГўГҐГ°ГїГҐГІ Г­Г Г«ГЁГ·ГЁГҐ Г¤ГҐГ©Г±ГІГўГЁГ© Г± ГЄГ«Г ГўГЁГ ГІГіГ°Г» ГЁГ«ГЁ Г¬Г»ГёГЁ
     }
     glfwTerminate();
     return 0;
