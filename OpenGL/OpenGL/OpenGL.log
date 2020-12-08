@@ -1,0 +1,9 @@
+﻿  Application.cpp
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(212,28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(317,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(318,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(321,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(322,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(323,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\OpenGL\src\Application.cpp(324,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  OpenGL.vcxproj -> C:\Users\Kuzmin\Desktop\3 курс\комп графика\OpenGL\Debug\OpenGL.exe
