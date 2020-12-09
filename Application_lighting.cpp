@@ -14,7 +14,7 @@ static unsigned int CompileShader(unsigned int type, const std::string& source);
 static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
 unsigned int CreateTexture(const char* path);
 
-// делаем камеру
+// Г¤ГҐГ«Г ГҐГ¬ ГЄГ Г¬ГҐГ°Гі
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -79,10 +79,10 @@ const char* FragmentShaderSource = "#version 330 core\n"
     "   vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;\n"
     
     "   vec3 viewDir = normalize(viewPos - FragPos);\n"
-    "   vec3 reflectDir = reflect(-lightDir, norm);\n"// -lightDir, так как reflect должен принять
-    //                                 вектор, имеющий направление от источника света к объекту
+    "   vec3 reflectDir = reflect(-lightDir, norm);\n"// -lightDir, ГІГ ГЄ ГЄГ ГЄ reflect Г¤Г®Г«Г¦ГҐГ­ ГЇГ°ГЁГ­ГїГІГј
+    //                                 ГўГҐГЄГІГ®Г°, ГЁГ¬ГҐГѕГ№ГЁГ© Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ Г®ГІ ГЁГ±ГІГ®Г·Г­ГЁГЄГ  Г±ГўГҐГІГ  ГЄ Г®ГЎГєГҐГЄГІГі
     "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-    //  shininess - значение блеска (чем больше значение, тем меньше рассеивается блеск)
+    //  shininess - Г§Г­Г Г·ГҐГ­ГЁГҐ ГЎГ«ГҐГ±ГЄГ  (Г·ГҐГ¬ ГЎГ®Г«ГјГёГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ, ГІГҐГ¬ Г¬ГҐГ­ГјГёГҐ Г°Г Г±Г±ГҐГЁГўГ ГҐГІГ±Гї ГЎГ«ГҐГ±ГЄ)
     "   vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;\n"
 
     "   vec3 result = ambient + diffuse + specular;\n"
@@ -98,7 +98,7 @@ const char* LightFragmentShaderSource = "#version 330 core\n"
 int main(void)
 {
     GLFWwindow* window;
-    if (!glfwInit()) // инициализация GLFW
+    if (!glfwInit()) // ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї GLFW
         return -1;
     window = glfwCreateWindow(800, 600, "Window", NULL, NULL);
     if (!window) {
@@ -207,13 +207,13 @@ int main(void)
     glUniform1i(glGetUniformLocation(shaderProgram, "material.diffuse"), 0);
     glUniform1i(glGetUniformLocation(shaderProgram, "material.specular"), 1);
 
-    while (!glfwWindowShouldClose(window)) // цикл для рисования изображений (пока пользователь не закроет)
+    while (!glfwWindowShouldClose(window)) // Г¶ГЁГЄГ« Г¤Г«Гї Г°ГЁГ±Г®ГўГ Г­ГЁГї ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГ© (ГЇГ®ГЄГ  ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј Г­ГҐ Г§Г ГЄГ°Г®ГҐГІ)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        processInput(window); // чтобы закрыть окно с помощью кнопки
+        processInput(window); // Г·ГІГ®ГЎГ» Г§Г ГЄГ°Г»ГІГј Г®ГЄГ­Г® Г± ГЇГ®Г¬Г®Г№ГјГѕ ГЄГ­Г®ГЇГЄГЁ
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -225,9 +225,9 @@ int main(void)
 
         glUniform1f(glGetUniformLocation(shaderProgram, "material.shininess"), 64.0f);
 
-        // свойства светового источника
+        // Г±ГўГ®Г©Г±ГІГўГ  Г±ГўГҐГІГ®ГўГ®ГЈГ® ГЁГ±ГІГ®Г·Г­ГЁГЄГ 
         glUniform3f(glGetUniformLocation(shaderProgram, "light.direction"), 
-            -0.2f, -1.0f, -0.3f); // минус, т.к. направление ОТ источника света
+            -0.2f, -1.0f, -0.3f); // Г¬ГЁГ­ГіГ±, ГІ.ГЄ. Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ ГЋГ’ ГЁГ±ГІГ®Г·Г­ГЁГЄГ  Г±ГўГҐГІГ 
         glUniform3f(glGetUniformLocation(shaderProgram, "light.ambient"),
             0.2f, 0.2f, 0.0f);
         glUniform3f(glGetUniformLocation(shaderProgram, "light.diffuse"),
@@ -258,7 +258,7 @@ int main(void)
             unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
             
-            // нормальная матрица, которая не будет искажать нормальный вектор при масштабировании
+            // Г­Г®Г°Г¬Г Г«ГјГ­Г Гї Г¬Г ГІГ°ГЁГ¶Г , ГЄГ®ГІГ®Г°Г Гї Г­ГҐ ГЎГіГ¤ГҐГІ ГЁГ±ГЄГ Г¦Г ГІГј Г­Г®Г°Г¬Г Г«ГјГ­Г»Г© ГўГҐГЄГІГ®Г° ГЇГ°ГЁ Г¬Г Г±ГёГІГ ГЎГЁГ°Г®ГўГ Г­ГЁГЁ
             glm::mat3 normal = glm::mat3(glm::transpose(glm::inverse(model)));
             unsigned int normalLoc = glGetUniformLocation(shaderProgram, "normalMatrix");
             glUniformMatrix3fv(normalLoc, 1, GL_FALSE, glm::value_ptr(normal));
@@ -266,7 +266,7 @@ int main(void)
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        // светлый куб
+        // Г±ГўГҐГІГ«Г»Г© ГЄГіГЎ
         /*glUseProgram(lightingShaderProgram);
 
         glm::mat4 model = glm::mat4(1.0f);
@@ -284,7 +284,7 @@ int main(void)
         glDrawArrays(GL_TRIANGLES, 0, 36);*/
         
         glfwSwapBuffers(window);
-        glfwPollEvents(); // проверяет наличие действий с клавиатуры или мыши
+        glfwPollEvents(); // ГЇГ°Г®ГўГҐГ°ГїГҐГІ Г­Г Г«ГЁГ·ГЁГҐ Г¤ГҐГ©Г±ГІГўГЁГ© Г± ГЄГ«Г ГўГЁГ ГІГіГ°Г» ГЁГ«ГЁ Г¬Г»ГёГЁ
     }
     glfwTerminate();
     return 0;
