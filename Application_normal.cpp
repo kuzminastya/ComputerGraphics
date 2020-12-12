@@ -17,7 +17,7 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
 unsigned int CreateTexture(const char* path);
 void renderQuad();
 
-// делаем камеру
+// Г¤ГҐГ«Г ГҐГ¬ ГЄГ Г¬ГҐГ°Гі
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -83,10 +83,10 @@ const char* FragmentShaderSource = "#version 330 core\n"
     "   vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;\n"
     
     "   vec3 viewDir = normalize(viewPos - FragPos);\n"
-    "   vec3 reflectDir = reflect(-lightDir, norm);\n"// -lightDir, так как reflect должен принять
-    //                                 вектор, имеющий направление от источника света к объекту
+    "   vec3 reflectDir = reflect(-lightDir, norm);\n"// -lightDir, ГІГ ГЄ ГЄГ ГЄ reflect Г¤Г®Г«Г¦ГҐГ­ ГЇГ°ГЁГ­ГїГІГј
+    //                                 ГўГҐГЄГІГ®Г°, ГЁГ¬ГҐГѕГ№ГЁГ© Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ Г®ГІ ГЁГ±ГІГ®Г·Г­ГЁГЄГ  Г±ГўГҐГІГ  ГЄ Г®ГЎГєГҐГЄГІГі
     "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-    //  shininess - значение блеска (чем больше значение, тем меньше рассеивается блеск)
+    //  shininess - Г§Г­Г Г·ГҐГ­ГЁГҐ ГЎГ«ГҐГ±ГЄГ  (Г·ГҐГ¬ ГЎГ®Г«ГјГёГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ, ГІГҐГ¬ Г¬ГҐГ­ГјГёГҐ Г°Г Г±Г±ГҐГЁГўГ ГҐГІГ±Гї ГЎГ«ГҐГ±ГЄ)
     "   vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;\n"
 
     "   vec3 result = ambient + diffuse + specular;\n"
@@ -188,84 +188,18 @@ const char* NormalFragmentShaderSource = "#version 330 core\n"
     "   vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;\n"
 
     "   vec3 viewDir = normalize(TangentViewPos - TangentFragPos);\n"
-    "   vec3 reflectDir = reflect(-lightDir, normal);\n"// -lightDir, так как reflect должен принять
-    //                                 вектор, имеющий направление от источника света к объекту
+    "   vec3 reflectDir = reflect(-lightDir, normal);\n"// -lightDir, ГІГ ГЄ ГЄГ ГЄ reflect Г¤Г®Г«Г¦ГҐГ­ ГЇГ°ГЁГ­ГїГІГј
+    //                                 ГўГҐГЄГІГ®Г°, ГЁГ¬ГҐГѕГ№ГЁГ© Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ Г®ГІ ГЁГ±ГІГ®Г·Г­ГЁГЄГ  Г±ГўГҐГІГ  ГЄ Г®ГЎГєГҐГЄГІГі
     "   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);\n"
-    //  shininess - значение блеска (чем больше значение, тем меньше рассеивается блеск)
+    //  shininess - Г§Г­Г Г·ГҐГ­ГЁГҐ ГЎГ«ГҐГ±ГЄГ  (Г·ГҐГ¬ ГЎГ®Г«ГјГёГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ, ГІГҐГ¬ Г¬ГҐГ­ГјГёГҐ Г°Г Г±Г±ГҐГЁГўГ ГҐГІГ±Гї ГЎГ«ГҐГ±ГЄ)
     "   vec3 specular = light.specular * spec;\n"
     "   FragColor = vec4(ambient + diffuse + specular, 1.0f);\n"
     "}\0";
 
-/*const char* SmokeVertexShaderSource = "#version 330 core\n"
-    "subroutine void RenderPassType();\n"
-    "subroutine uniform RenderPassType RenderPass;\n"
-    "layout (location = 0) in vec3 VertexPosition;\n"
-    "layout (location = 1) in vec3 VertexVelocity;\n"
-    "layout (location = 2) in float VertexStartTime;\n"
-    "layout (location = 3) in vec3 VertexInitialVelocity;\n"
-    "out vec3 Position;\n" // для обратной связи
-    "out vec3 Velocity;\n" // для обратной связи
-    "out float StartTime;\n" // для обратной связи
-    "out float Transp;\n" // для фрагментного шейдера
-    "uniform float Time;\n" // время анимации
-    "uniform float H;\n" // время, прошедшее между двумя кадрами
-    "uniform vec3 Accel;\n" // ускорение
-    "uniform float ParticleLifetime;\n" // время жизни частиц
-    "uniform float MinParticleSize;\n"
-    "uniform float MaxParticleSize;\n"
-    "uniform mat4 MVP;\n"
-
-    "subroutine (RenderPassType)\n"
-    "void update() {\n"
-    "	Position = VertexPosition;\n"
-    "	Velocity = VertexVelocity;\n"
-    "	StartTime = VertexStartTime;\n"
-    "	if( Time >= StartTime ) {\n"
-    "		float age = Time - StartTime;\n"
-    "		if( age > ParticleLifetime ) {\n"
-    //			срок жизни частицы истек, использовать повторно
-    "			Position = vec3(0.0);\n"
-    "			Velocity = VertexInitialVelocity;\n"
-    "			StartTime = Time;\n"
-    "		} else {\n"
-    //			частица существует, обновить
-    "			Position += Velocity * H;\n"
-    "			Velocity += Accel * H;\n"
-    "		}\n"
-    "	}\n"
-    "}\n"
-
-    "subroutine (RenderPassType)\n"
-    "void render() {\n"
-    "	float age = Time - VertexStartTime;\n"
-    "	Transp = 0.0;"
-    "	if( Time >= VertexStartTime ) {\n"
-    "       float agePct = age/ParticleLifetime;\n"
-    "       Transp = 1.0 - agePct;\n"
-    "       gl_PointSize = mix(MinParticleSize, MaxParticleSize, agePct);\n"
-    "   }\n"
-    "   gl_Position = MVP * vec4(VertexPosition, 1.0);\n"
-    "}\n"
-
-    "void main()\n"
-    "{\n"
-    "   RenderPass();\n" // вызывает render() или update()
-    "}\0";
-
-const char* SmokeFragmentShaderSource = "#version 330 core\n"
-    "uniform sampler2D ParticleTex;\n"
-    "in float Transp;\n"
-    "layout (location = 0) out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = texture(ParticleTex, gl_PointCoord);\n"
-    "   FragColor.a *= Transp;\n"
-    "}\0";
-    */
 int main(void)
 {
     GLFWwindow* window;
-    if (!glfwInit()) // инициализация GLFW
+    if (!glfwInit()) // ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§Г Г¶ГЁГї GLFW
         return -1;
     window = glfwCreateWindow(800, 600, "Window", NULL, NULL);
     if (!window) {
@@ -288,14 +222,13 @@ int main(void)
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_PROGRAM_POINT_SIZE); // для увеличения размера частиц
+    glEnable(GL_PROGRAM_POINT_SIZE); // Г¤Г«Гї ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГї Г°Г Г§Г¬ГҐГ°Г  Г·Г Г±ГІГЁГ¶
 
     unsigned int shaderProgram = CreateShader(VertexShaderSource, FragmentShaderSource);
     //unsigned int lightingShaderProgram = CreateShader(VertexShaderSource, LightFragmentShaderSource);
     unsigned int borderShaderProgram = CreateShader(VertexShaderSource, BorderFragmentShaderSource);
     unsigned int blendingShaderProgram = CreateShader(VertexShaderSource, BlendingFragmentShaderSource);
     unsigned int normalShaderProgram = CreateShader(NormalVertexShaderSource, NormalFragmentShaderSource);
-    //unsigned int smokeShaderProgram = CreateShader(SmokeVertexShaderSource, SmokeFragmentShaderSource);
 
     float vertices[] = {
         // positions          // normals           // texture coords
@@ -361,7 +294,7 @@ int main(void)
         1.0f, -0.5f,  0.0f, 0.0f,  0.0f, -1.0f, 1.0f,  1.0f,
         1.0f,  1.5f,  0.0f, 0.0f,  0.0f, -1.0f, 1.0f,  0.0f
     };   
-    // кубик
+    // ГЄГіГЎГЁГЄ
     unsigned int cubeVBO, cubeVAO;
     glGenBuffers(1, &cubeVBO);
     glGenVertexArrays(1, &cubeVAO);
@@ -374,7 +307,7 @@ int main(void)
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
-    // плоскость
+    // ГЇГ«Г®Г±ГЄГ®Г±ГІГј
     unsigned int planeVAO, planeVBO;
     glGenVertexArrays(1, &planeVAO);
     glGenBuffers(1, &planeVBO);
@@ -388,7 +321,7 @@ int main(void)
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
-    //пальмы
+    //ГЇГ Г«ГјГ¬Г»
     unsigned int palmVAO, palmVBO;
     glGenVertexArrays(1, &palmVAO);
     glGenBuffers(1, &palmVBO);
@@ -403,184 +336,44 @@ int main(void)
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
-    std::string diffuseCube = "./src/marble.jpg"; // куб
+    std::string diffuseCube = "./src/marble.jpg"; // ГЄГіГЎ
     unsigned int diffuseMapCube = CreateTexture(diffuseCube.c_str());
     std::string specularCube = "./src/white.jpg";
     unsigned int specularMapCube = CreateTexture(specularCube.c_str());
     std::string diffusePlane = "./src/sand.jpg";
-    unsigned int diffuseMapPlane = CreateTexture(diffusePlane.c_str()); // плоскость
+    unsigned int diffuseMapPlane = CreateTexture(diffusePlane.c_str()); // ГЇГ«Г®Г±ГЄГ®Г±ГІГј
     std::string specularPlane = "./src/sand_specular.jpg";
     unsigned int specularMapPlane = CreateTexture(specularPlane.c_str());
-    std::string palm = "./src/palm.png"; // пальма
+    std::string palm = "./src/palm.png"; // ГЇГ Г«ГјГ¬Г 
     unsigned int palmTexture = CreateTexture(palm.c_str());
     std::string half_palm1Path = "./src/half_palm1.png";
     unsigned int halfpalmTexture1 = CreateTexture(half_palm1Path.c_str());
     std::string half_palm2Path = "./src/half_palm2.png";
     unsigned int halfpalmTexture2 = CreateTexture(half_palm2Path.c_str());
-    std::string diffuseStone = "./src/stoneDiffuse.jpeg"; // камень
+    std::string diffuseStone = "./src/stoneDiffuse.jpeg"; // ГЄГ Г¬ГҐГ­Гј
     unsigned int diffuseMapStone = CreateTexture(diffuseStone.c_str());
-    //std::string specularStone = "./src/stoneSpecular.png";
-    //unsigned int specularMapStone = CreateTexture(specularStone.c_str());
     std::string normalStone = "./src/stoneNormal.png";
     unsigned int normalMapStone = CreateTexture(normalStone.c_str());
-    //std::string smokePath = "./src/grey.jpg";
-    //unsigned int smokeTexture = CreateTexture(smokePath.c_str());
 
     std::vector<glm::vec3> palmsPositions
     {
         glm::vec3(-1.5f, 0.0f, -0.48f),
         glm::vec3(1.5f, 0.0f, 0.51f),
-        glm::vec3(0.20001f, 0.0f, -2.3001f), // 1 (2 половина дерева)
-        glm::vec3(0.2f, 0.0f, -3.3f), // 2 (1 половина дерева)
-        glm::vec3(-0.8f, 0.0f, -2.3f), // 3 (1 половина дерева)
-        glm::vec3(0.2f, 0.0f, -1.3f), // 4 (2 половина дерева)
+        glm::vec3(0.20001f, 0.0f, -2.3001f), // 1 (2 ГЇГ®Г«Г®ГўГЁГ­Г  Г¤ГҐГ°ГҐГўГ )
+        glm::vec3(0.2f, 0.0f, -3.3f), // 2 (1 ГЇГ®Г«Г®ГўГЁГ­Г  Г¤ГҐГ°ГҐГўГ )
+        glm::vec3(-0.8f, 0.0f, -2.3f), // 3 (1 ГЇГ®Г«Г®ГўГЁГ­Г  Г¤ГҐГ°ГҐГўГ )
+        glm::vec3(0.2f, 0.0f, -1.3f), // 4 (2 ГЇГ®Г«Г®ГўГЁГ­Г  Г¤ГҐГ°ГҐГўГ )
     };
-    
-    /*GLuint posBuf[2], velBuf[2];
-    GLuint particleArray[2];
-    GLuint feedback[2], initVel, startTime[2];
-    bool drawBuf = false;
-    GLuint renderSub, updateSub;
-    int nParticles = 1000;
-    
-    glGenBuffers(2, posBuf);    // position buffers
-    glGenBuffers(2, velBuf);    // velocity buffers
-    glGenBuffers(2, startTime); // Start time buffers
-    glGenBuffers(1, &initVel);  // Initial velocity buffer (never changes, only need one)
 
-    // Allocate space for all buffers
-    int size = nParticles * 3 * sizeof(float);
-    glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
-    glBindBuffer(GL_ARRAY_BUFFER, posBuf[1]);
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
-    glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
-    glBindBuffer(GL_ARRAY_BUFFER, velBuf[1]);
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_DYNAMIC_COPY);
-    glBindBuffer(GL_ARRAY_BUFFER, initVel);
-    glBufferData(GL_ARRAY_BUFFER, size, NULL, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, startTime[0]);
-    glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), NULL, GL_DYNAMIC_COPY);
-    glBindBuffer(GL_ARRAY_BUFFER, startTime[1]);
-    glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), NULL, GL_DYNAMIC_COPY);
-
-    // Fill the first position buffer with zeroes
-    GLfloat* data = new GLfloat[nParticles * 3];
-    for (int i = 0; i < 3 * nParticles; i++) {
-        data[i] = 10.0f;
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-
-    // Fill the first velocity buffer with random velocities
-    float theta, phi, velocity;
-    glm::vec3 v(0.0f);
-    data = new GLfloat[nParticles * 3];
-    for (int i = 0; i < nParticles; i++) {
-        theta = glm::mix(0.0f, glm::pi<float>() / 1.5f, (float)rand()/RAND_MAX);
-        phi = glm::mix(0.0f, glm::two_pi<float>(), (float)rand() / RAND_MAX);
-
-        v.x = sinf(theta) * cosf(phi);
-        v.y = cosf(theta);
-        v.z = sinf(theta) * sinf(phi);
-
-        velocity = glm::mix(0.1f, 0.2f, (float)rand() / RAND_MAX);
-        v = glm::normalize(v) * velocity;
-
-        data[3 * i] = v.x;
-        data[3 * i + 1] = v.y;
-        data[3 * i + 2] = v.z;
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-    glBindBuffer(GL_ARRAY_BUFFER, initVel);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-
-    // Fill the first start time buffer
-    delete[] data;
-    data = new GLfloat[nParticles];
-    float time = 0.0f;
-    float rate = 0.01f;
-    for (int i = 0; i < nParticles; i++) {
-        data[i] = time;
-        time += rate;
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, startTime[0]);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, nParticles * sizeof(float), data);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    delete[] data;
-
-    // Create vertex arrays for each set of buffers
-    glGenVertexArrays(2, particleArray);
-
-    // Set up particle array 0
-    glBindVertexArray(particleArray[0]);
-    glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, startTime[0]);
-    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(2);
-
-    glBindBuffer(GL_ARRAY_BUFFER, initVel);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(3);
-
-    // Set up particle array 1
-    glBindVertexArray(particleArray[1]);
-    glBindBuffer(GL_ARRAY_BUFFER, posBuf[1]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, velBuf[1]);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, startTime[1]);
-    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(2);
-
-    glBindBuffer(GL_ARRAY_BUFFER, initVel);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-    glEnableVertexAttribArray(3);
-
-    glBindVertexArray(0);
-
-    // Setup the feedback objects
-    glGenTransformFeedbacks(2, feedback);
-
-    // Transform feedback 0
-    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[0]);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBuf[0]);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, velBuf[0]);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 2, startTime[0]);
-
-    // Transform feedback 1
-    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[1]);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBuf[1]);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, velBuf[1]);
-    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 2, startTime[1]);
-
-    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
-
-    float InitialTime = glfwGetTime();*/
-
-    while (!glfwWindowShouldClose(window)) // цикл для рисования изображений (пока пользователь не закроет)
+    while (!glfwWindowShouldClose(window)) // Г¶ГЁГЄГ« Г¤Г«Гї Г°ГЁГ±Г®ГўГ Г­ГЁГї ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГ© (ГЇГ®ГЄГ  ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј Г­ГҐ Г§Г ГЄГ°Г®ГҐГІ)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        processInput(window); // чтобы закрыть окно с помощью кнопки
+        processInput(window); // Г·ГІГ®ГЎГ» Г§Г ГЄГ°Г»ГІГј Г®ГЄГ­Г® Г± ГЇГ®Г¬Г®Г№ГјГѕ ГЄГ­Г®ГЇГЄГЁ
 
-        // сортируем окна, чтобы потом вывести в обратном порядке
+        // Г±Г®Г°ГІГЁГ°ГіГҐГ¬ Г®ГЄГ­Г , Г·ГІГ®ГЎГ» ГЇГ®ГІГ®Г¬ ГўГ»ГўГҐГ±ГІГЁ Гў Г®ГЎГ°Г ГІГ­Г®Г¬ ГЇГ®Г°ГїГ¤ГЄГҐ
         std::map<float, glm::vec3> sorted; 
         for (unsigned int i = 0; i < palmsPositions.size(); i++)
         {
@@ -598,9 +391,9 @@ int main(void)
 
         glUniform1f(glGetUniformLocation(shaderProgram, "material.shininess"), 64.0f);
 
-        // свойства светового источника
+        // Г±ГўГ®Г©Г±ГІГўГ  Г±ГўГҐГІГ®ГўГ®ГЈГ® ГЁГ±ГІГ®Г·Г­ГЁГЄГ 
         glUniform3f(glGetUniformLocation(shaderProgram, "light.direction"), 
-            -0.2f, -1.0f, -0.3f); // минус, т.к. направление ОТ источника света
+            -0.2f, -1.0f, -0.3f); // Г¬ГЁГ­ГіГ±, ГІ.ГЄ. Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ ГЋГ’ ГЁГ±ГІГ®Г·Г­ГЁГЄГ  Г±ГўГҐГІГ 
         glUniform3f(glGetUniformLocation(shaderProgram, "light.ambient"),
             0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(shaderProgram, "light.diffuse"),
@@ -628,7 +421,7 @@ int main(void)
 
         glUseProgram(shaderProgram);
 
-        // рисуем пол
+        // Г°ГЁГ±ГіГҐГ¬ ГЇГ®Г«
         glStencilMask(0x00);
         glBindVertexArray(planeVAO);
         glActiveTexture(GL_TEXTURE0);
@@ -644,7 +437,7 @@ int main(void)
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
 
-        // рисуем сами кубики
+        // Г°ГЁГ±ГіГҐГ¬ Г±Г Г¬ГЁ ГЄГіГЎГЁГЄГЁ
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glStencilMask(0xFF);
         glBindVertexArray(cubeVAO);
@@ -661,7 +454,7 @@ int main(void)
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // увеличиваем кубики, для того чтобы нарисовать обводку
+        // ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГ¬ ГЄГіГЎГЁГЄГЁ, Г¤Г«Гї ГІГ®ГЈГ® Г·ГІГ®ГЎГ» Г­Г Г°ГЁГ±Г®ГўГ ГІГј Г®ГЎГўГ®Г¤ГЄГі
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         glStencilMask(0x00);
         glDisable(GL_DEPTH_TEST);
@@ -686,7 +479,7 @@ int main(void)
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
         glEnable(GL_DEPTH_TEST);
 
-        //рисуем камень
+        //Г°ГЁГ±ГіГҐГ¬ ГЄГ Г¬ГҐГ­Гј
         glUseProgram(normalShaderProgram);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseMapStone);
@@ -696,7 +489,7 @@ int main(void)
             cameraPos.x, cameraPos.y, cameraPos.z);
         glUniform1f(glGetUniformLocation(normalShaderProgram, "material.shininess"), 256.0f);
         glUniform3f(glGetUniformLocation(normalShaderProgram, "lightDir"),
-            -0.2f, -1.0f, -0.3f); // минус, т.к. направление ОТ источника света
+            -0.2f, -1.0f, -0.3f); // Г¬ГЁГ­ГіГ±, ГІ.ГЄ. Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ ГЋГ’ ГЁГ±ГІГ®Г·Г­ГЁГЄГ  Г±ГўГҐГІГ 
         glUniform3f(glGetUniformLocation(normalShaderProgram, "light.ambient"),
             0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(normalShaderProgram, "light.diffuse"),
@@ -713,45 +506,9 @@ int main(void)
         model = glm::translate(model, glm::vec3(-3.0f, -0.49f, -3.0f));
         glUniformMatrix4fv(glGetUniformLocation(normalShaderProgram, "model"),
             1, GL_FALSE, glm::value_ptr(model));
-
         renderQuad();
-        
-        // рисуем дым
-        /*glUseProgram(smokeShaderProgram);
 
-        GLuint updateSub = glGetSubroutineIndex(smokeShaderProgram, GL_VERTEX_SHADER, "update");
-        GLuint renderSub = glGetSubroutineIndex(smokeShaderProgram, GL_VERTEX_SHADER, "render");
-        glUniformSubroutinesuiv(GL_VERTEX_SHADER, 1, &updateSub);
-
-        glUniform3f(glGetUniformLocation(smokeShaderProgram, "Accel"),
-            0.0f, 0.1f, 0.0f);
-        glUniform1f(glGetUniformLocation(smokeShaderProgram, "ParticleLifetime"), 6.0f);
-        glUniform1i(glGetUniformLocation(smokeShaderProgram, "ParticleTex"), 0);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, smokeTexture);
-        glUniform1f(glGetUniformLocation(smokeShaderProgram, "MinParticleSize"), 10.0f);
-        glUniform1f(glGetUniformLocation(smokeShaderProgram, "MaxParticleSize"), 200.0f);
-        model = glm::mat4(1.0f);
-        glm::mat4 MVP = projection * view * model;
-        unsigned int loc = glGetUniformLocation(smokeShaderProgram, "MVP");
-        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(MVP));
-        glUniform1f(glGetUniformLocation(smokeShaderProgram, "Time"), glfwGetTime() - InitialTime);
-        glUniform1f(glGetUniformLocation(smokeShaderProgram, "H"), deltaTime);
-        
-        glEnable(GL_RASTERIZER_DISCARD);
-        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[(int)drawBuf]);
-        glBeginTransformFeedback(GL_POINTS);
-        glBindVertexArray(particleArray[(int)(1 - drawBuf)]);
-        glDrawArrays(GL_POINTS, 0, nParticles);
-        glEndTransformFeedback();
-
-        glDisable(GL_RASTERIZER_DISCARD);
-        glUniformSubroutinesuiv(GL_VERTEX_SHADER, 1, &renderSub);
-        glBindVertexArray(particleArray[(int)drawBuf]);
-        glDrawTransformFeedback(GL_POINTS, feedback[(int)drawBuf]);
-        drawBuf = !drawBuf;*/
-
-        // рисуем пальмы
+        // Г°ГЁГ±ГіГҐГ¬ ГЇГ Г«ГјГ¬Г»
         glUseProgram(blendingShaderProgram);
         glUniform1i(glGetUniformLocation(blendingShaderProgram, "texture1"), 0);
         glBindVertexArray(palmVAO);
@@ -760,7 +517,7 @@ int main(void)
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         projectionLoc = glGetUniformLocation(blendingShaderProgram, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        // рисуем от дальнего к ближнему
+        // Г°ГЁГ±ГіГҐГ¬ Г®ГІ Г¤Г Г«ГјГ­ГҐГЈГ® ГЄ ГЎГ«ГЁГ¦Г­ГҐГ¬Гі
         for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
         {
             model = glm::mat4(1.0f);
@@ -786,7 +543,7 @@ int main(void)
         }
 
         glfwSwapBuffers(window);
-        glfwPollEvents(); // проверяет наличие действий с клавиатуры или мыши
+        glfwPollEvents(); // ГЇГ°Г®ГўГҐГ°ГїГҐГІ Г­Г Г«ГЁГ·ГЁГҐ Г¤ГҐГ©Г±ГІГўГЁГ© Г± ГЄГ«Г ГўГЁГ ГІГіГ°Г» ГЁГ«ГЁ Г¬Г»ГёГЁ
     }
     glfwTerminate();
     return 0;
@@ -885,10 +642,6 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
     unsigned int program = glCreateProgram();
     unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
     unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-    /*if (vertexShader == SmokeVertexShaderSource) {
-        const char* outputNames[] = { "Position", "Velocity", "StartTime" };
-        glTransformFeedbackVaryings(program, 3, outputNames, GL_SEPARATE_ATTRIBS);
-    }*/
     glAttachShader(program, vs);
     glAttachShader(program, fs);
     glLinkProgram(program);
