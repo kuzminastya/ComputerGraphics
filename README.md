@@ -9,3 +9,4 @@
 6) parallax relief mapping 2
 
 Инструкция по сборке:
+запустить Application.cpp
